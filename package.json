@@ -1,0 +1,29 @@
+{
+  "name": "sagecoin",
+  "version": "1.0.0",
+  "description": "SageCoin - React TypeScript + NestJS Application",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run start:dev",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "build:all": "npm run build:server && npm run build:client",
+    "start:client": "cd client && npm run start",
+    "start:server": "cd server && npm run start:prod"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "nestjs",
+    "vite"
+  ],
+  "author": "",
+  "license": "UNLICENSED"
+}
+

@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap');
+
+@layer base {
+  body {
+    @apply bg-primary-dark text-accent;
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-base-white;
+  }
+  
+  /* RTL Support */
+  [dir="rtl"] body {
+    font-family: 'Cairo', 'Inter', system-ui, sans-serif;
+  }
+  
+  [dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+  }
+  
+  [dir="ltr"] {
+    direction: ltr;
+    text-align: left;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply relative font-semibold px-6 py-3 rounded-2xl
+           text-base-white
+           transition-all duration-300 ease-out
+           focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-primary-dark
+           overflow-hidden;
+    background: rgba(207, 226, 243, 0.15);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 
+      0 8px 32px 0 rgba(31, 38, 135, 0.15),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+  }
+  
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(255, 255, 255, 0.2),
+      transparent
+    );
+    transition: left 0.5s ease;
+  }
+  
+  .btn-primary:hover {
+    background: rgba(207, 226, 243, 0.25);
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 
+      0 12px 40px 0 rgba(31, 38, 135, 0.2),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.4);
+    transform: translateY(-1px);
+  }
+  
+  .btn-primary:hover::before {
+    left: 100%;
+  }
+  
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 
+      0 4px 20px 0 rgba(31, 38, 135, 0.15),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+  }
+  
+  .btn-secondary {
+    @apply relative font-semibold px-6 py-3 rounded-2xl
+           text-base-white
+           transition-all duration-300 ease-out
+           focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-primary-dark
+           overflow-hidden;
+    background: rgba(53, 80, 96, 0.2);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 
+      0 8px 32px 0 rgba(31, 38, 135, 0.1),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+  }
+  
+  .btn-secondary:hover {
+    background: rgba(53, 80, 96, 0.3);
+    border-color: rgba(255, 255, 255, 0.25);
+    box-shadow: 
+      0 12px 40px 0 rgba(31, 38, 135, 0.15),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+  }
+  
+  .btn-secondary:active {
+    transform: translateY(0);
+    box-shadow: 
+      0 4px 20px 0 rgba(31, 38, 135, 0.1),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+  }
+  
+  .input-field {
+    @apply w-full px-4 py-3 bg-base-white border border-gray-300 rounded-lg
+           text-primary-dark placeholder-gray-500
+           focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent
+           transition-all duration-200;
+  }
+  
+  .label-field {
+    @apply block text-sm font-medium text-primary-dark mb-2;
+  }
+}
+/* globals.css */
+@keyframes pulse-subtle {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(var(--accent-rgb), 0.4); }
+  50% { box-shadow: 0 0 20px 4px rgba(var(--accent-rgb), 0.2); }
+  /* Note: If you don't have --accent-rgb defined, replace rgb(...) 
+     with the actual hex color of your accent, e.g., #3B82F6 */
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* globals.css */
+
+/* Define the shine animation moving from left (-100%) to right (100%) */
+@keyframes shine-metallic {
+  to {
+    background-position: 200% center;
+  }
+}
+
+/* Create a utility class to apply the animation */
+.animate-text-shine {
+  /* The background is sized to 200% auto so it can move across the text */
+  background-size: 200% auto;
+  /* The animation runs for 5 seconds, linearly, forever */
+  animation: shine-metallic 5s linear infinite;
+}
+
