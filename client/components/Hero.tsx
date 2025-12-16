@@ -5,6 +5,7 @@ import HeroSlider from './HeroSlider'
 import DiamondBackground3D from './DiamondBackground3D'
 import { Canvas } from '@react-three/fiber'
 import DiamondIcon from './DiamondIcon'
+import MarketStatusBadge from './MarketStatusBadge'
 
 export default function Hero() {
   const { t, isRTL } = useLanguage()
@@ -137,20 +138,8 @@ export default function Hero() {
                       <div className="absolute inset-0 border border-accent/40 rounded-2xl animate-pulse"></div>
                       
                       {/* Counter-rotate content so text is straight */}
-                      <div className="-rotate-45 text-center relative z-10">
-                          <div className="flex items-center justify-center gap-2 mb-1">
-                              <span className="relative flex h-3 w-3">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                              </span>
-                              <span className="text-xs font-bold text-accent tracking-widest uppercase">Live</span>
-                          </div>
-                          <p className="text-base-white font-bold text-sm lg:text-base">
-                              Market Open
-                          </p>
-                          <p className="text-green-400 text-xs font-mono mt-1">
-                              +1.24% ▲
-                          </p>
+                      <div className="-rotate-45 relative z-10">
+                          <MarketStatusBadge market="NYSE" showPercentage={true} />
                       </div>
 
                   </div>

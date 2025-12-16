@@ -24,6 +24,8 @@
     "vite"
   ],
   "author": "",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "dependencies": {
+    "framer-motion": "^12.23.26"
+  }
 }
-

@@ -16,6 +16,8 @@ const config: Config = {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        alexandria: ['Alexandria', 'Inter', 'system-ui', 'sans-serif'],
+        'dg-modal3at': ['DG-Modal3at', 'Alexandria', 'Inter', 'system-ui', 'sans-serif'],
       },
     },
   },

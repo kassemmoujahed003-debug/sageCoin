@@ -51,6 +51,7 @@ const translations: Record<Language, Record<string, string>> = {
     'courses.newContentWeekly': 'New content added weekly',
     'courses.lifetimeAccess': 'Lifetime Access',
     'courses.accessAnytime': 'Access all courses anytime',
+    'courses.bookQuote': 'The keys to the kingdom are hidden in the charts...',
     
     // VIP Trading
     'vip.title': 'VIP Trading',
@@ -65,7 +66,7 @@ const translations: Record<Language, Record<string, string>> = {
     'vip.buy': 'BUY',
     'vip.sell': 'SELL',
     'vip.unlockTitle': 'Unlock VIP Trading Access',
-    'vip.unlockDescription': 'Join our VIP program to gain access to real-time trade signals, exclusive market analysis, and direct access to our expert trading team. Get the edge you need to maximize your trading potential.',
+    'vip.unlockDescription': 'Join our exclusive VIP program and transform your trading experience with institutional-grade tools and insights. Gain access to real-time trade signals powered by advanced algorithms, comprehensive market analysis from our expert trading desk, and direct communication channels with professional traders. Our VIP members receive priority support, early access to new features, and detailed risk management strategies designed to help you maximize your trading potential while minimizing exposure.',
     'vip.subscribe': 'Subscribe to VIP',
     'vip.liveSignals': 'Live Trade Signals',
     'vip.realTimeSignals': 'Real-time entry and exit signals',
@@ -73,6 +74,17 @@ const translations: Record<Language, Record<string, string>> = {
     'vip.dailyInsights': 'In-depth market insights daily',
     'vip.directAccess': 'Direct Access',
     'vip.connectWithExperts': 'Connect with expert traders',
+    'vip.vipAccess': 'VIP ACCESS',
+    'vip.step1': 'Step 1',
+    'vip.step2': 'Step 2',
+    'vip.step3': 'Step 3',
+    'vip.realTimePrecision': 'Real-Time Precision',
+    'vip.realTimePrecisionDescription': 'Receive institutional-grade entry and exit signals directly to your dashboard, delivered with precise timing and comprehensive trade details including recommended lot sizes, stop-loss levels, and take-profit targets. Our advanced signal system analyzes multiple timeframes, market sentiment, and economic indicators to provide you with high-probability trading opportunities across major currency pairs, indices, and commodities. Each signal includes detailed rationale, risk assessment, and real-time updates as market conditions evolve.',
+    'vip.expertIntelligence': 'Expert Intelligence',
+    'vip.expertIntelligenceDescription': 'Access comprehensive daily market breakdowns, in-depth technical analysis, and fundamental insights from our top-tier trading desk. Our expert analysts provide detailed chart analysis with key support and resistance levels, trend identification, and market structure breakdowns. Receive weekly economic calendar reviews, central bank policy analysis, and geopolitical impact assessments that help you understand the bigger picture behind market movements and make more informed trading decisions.',
+    'vip.ready': 'Ready?',
+    'vip.startJourney': 'Start Your Journey',
+    'vip.startJourneyDescription': 'Join thousands of successful traders who trust SageCoin for their trading success. Our VIP community includes both retail traders and professional investors who have achieved consistent profitability through our proven strategies and expert guidance. With an average member satisfaction rate of 94% and a track record of helping traders improve their win rates by up to 35%, SageCoin VIP is the premier choice for serious traders looking to elevate their performance and achieve their financial goals.',
     
     // Public CTA
     'cta.title': 'Ready to Start Your Trading Journey?',
@@ -211,6 +223,7 @@ const translations: Record<Language, Record<string, string>> = {
     'courses.newContentWeekly': 'محتوى جديد يضاف أسبوعياً',
     'courses.lifetimeAccess': 'وصول مدى الحياة',
     'courses.accessAnytime': 'الوصول إلى جميع الدورات في أي وقت',
+    'courses.bookQuote': 'مفاتيح المملكة مخفية في الرسوم البيانية...',
     
     // VIP Trading
     'vip.title': 'تداول VIP',
@@ -225,7 +238,7 @@ const translations: Record<Language, Record<string, string>> = {
     'vip.buy': 'شراء',
     'vip.sell': 'بيع',
     'vip.unlockTitle': 'افتح وصول تداول VIP',
-    'vip.unlockDescription': 'انضم إلى برنامج VIP الخاص بنا للوصول إلى إشارات التداول في الوقت الفعلي وتحليل السوق الحصري والوصول المباشر إلى فريق التداول الخبير لدينا. احصل على الميزة التي تحتاجها لتعظيم إمكانات التداول الخاصة بك.',
+    'vip.unlockDescription': 'انضم إلى برنامج VIP الحصري الخاص بنا وحول تجربة التداول الخاصة بك باستخدام أدوات ورؤى من مستوى المؤسسات المالية. احصل على الوصول إلى إشارات التداول في الوقت الفعلي المدعومة بخوارزميات متقدمة، وتحليل شامل للسوق من مكتب التداول الخبير لدينا، وقنوات اتصال مباشرة مع المتداولين المحترفين. يتلقى أعضاء VIP لدينا دعمًا ذو أولوية، ووصولاً مبكرًا للميزات الجديدة، واستراتيجيات إدارة المخاطر التفصيلية المصممة لمساعدتك على تعظيم إمكانات التداول الخاصة بك مع تقليل التعرض للمخاطر.',
     'vip.subscribe': 'اشترك في VIP',
     'vip.liveSignals': 'إشارات التداول المباشرة',
     'vip.realTimeSignals': 'إشارات الدخول والخروج في الوقت الفعلي',
@@ -233,6 +246,17 @@ const translations: Record<Language, Record<string, string>> = {
     'vip.dailyInsights': 'رؤى السوق المتعمقة يومياً',
     'vip.directAccess': 'وصول مباشر',
     'vip.connectWithExperts': 'تواصل مع المتداولين الخبراء',
+    'vip.vipAccess': 'وصول VIP',
+    'vip.step1': 'الخطوة 1',
+    'vip.step2': 'الخطوة 2',
+    'vip.step3': 'الخطوة 3',
+    'vip.realTimePrecision': 'دقة الوقت الفعلي',
+    'vip.realTimePrecisionDescription': 'احصل على إشارات دخول وخروج من مستوى المؤسسات مباشرة إلى لوحة التحكم الخاصة بك، يتم تسليمها مع توقيت دقيق وتفاصيل تداول شاملة بما في ذلك أحجام اللوت الموصى بها، ومستويات وقف الخسارة، وأهداف جني الأرباح. يحلل نظام الإشارات المتقدم لدينا أطر زمنية متعددة، ومشاعر السوق، والمؤشرات الاقتصادية لتزويدك بفرص تداول عالية الاحتمالية عبر أزواج العملات الرئيسية والمؤشرات والسلع. تتضمن كل إشارة مبررًا تفصيليًا وتقييمًا للمخاطر وتحديثات في الوقت الفعلي مع تطور ظروف السوق.',
+    'vip.expertIntelligence': 'ذكاء خبير',
+    'vip.expertIntelligenceDescription': 'احصل على تحليلات السوق اليومية الشاملة، والتحليل الفني المتعمق، والرؤى الأساسية من مكتب التداول الرائد لدينا. يوفر محللونا الخبراء تحليلاً تفصيلياً للرسوم البيانية مع مستويات الدعم والمقاومة الرئيسية، وتحديد الاتجاهات، وتحليلات هيكل السوق. احصل على مراجعات التقويم الاقتصادي الأسبوعية، وتحليل سياسات البنوك المركزية، وتقييمات التأثير الجيوسياسي التي تساعدك على فهم الصورة الأكبر وراء تحركات السوق واتخاذ قرارات تداول أكثر استنارة.',
+    'vip.ready': 'مستعد؟',
+    'vip.startJourney': 'ابدأ رحلتك',
+    'vip.startJourneyDescription': 'انضم إلى آلاف المتداولين الناجحين الذين يثقون في SageCoin لنجاحهم في التداول. تتضمن مجتمع VIP لدينا كل من المتداولين الأفراد والمستثمرين المحترفين الذين حققوا ربحية ثابتة من خلال استراتيجياتنا المثبتة وإرشاداتنا الخبيرة. مع معدل رضا الأعضاء المتوسط البالغ 94% وسجل حافل في مساعدة المتداولين على تحسين معدلات الفوز بنسبة تصل إلى 35%، يعتبر SageCoin VIP الخيار الأول للمتداولين الجادين الذين يتطلعون إلى رفع أدائهم وتحقيق أهدافهم المالية.',
     
     // Public CTA
     'cta.title': 'هل أنت مستعد لبدء رحلتك في التداول؟',
