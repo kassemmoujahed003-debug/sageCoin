@@ -5,6 +5,11 @@ import { LanguageProvider } from '@/contexts/LanguageContext'
 export const metadata: Metadata = {
   title: 'SageCoin - Master the Markets with Institutional Precision',
   description: 'SageCoin provides expert analysis and exclusive trading strategies for the serious investor.',
+  icons: {
+    icon: '/dark.png',
+    shortcut: '/dark.png',
+    apple: '/dark.png',
+  },
 }
 
 export default function RootLayout({

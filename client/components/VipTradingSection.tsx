@@ -86,23 +86,7 @@ export default function VipTradingSection({ joinedVip }: VipTradingSectionProps)
         {/* MAIN CONTAINER - Two Column Layout */}
         <div className={`flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16 ${isRTL ? 'lg:flex-row-reverse' : ''}`}>
           
-          {/* LEFT SIDE - Text Content (Right side in RTL) */}
-          <div className="flex-1 flex flex-col justify-center space-y-6 lg:max-w-lg">
-            <div className="flex items-center gap-4">
-              <div className="w-3 h-3 bg-accent rotate-45 shadow-[0_0_10px_rgba(var(--accent-rgb),0.8)]"></div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-base-white">
-                {t('vip.title')}
-              </h2>
-            </div>
-            <p className="text-lg md:text-xl text-accent/90 leading-relaxed">
-              {t('vip.unlockDescription')}
-            </p>
-            <button className="btn-primary text-base font-bold px-8 py-3 shadow-lg hover:shadow-accent/50 transition-all rounded-xl self-start">
-              {t('vip.subscribe')}
-            </button>
-          </div>
-
-          {/* RIGHT SIDE - 3 Diamonds (Left side in RTL) */}
+          {/* LEFT SIDE - 3 Diamonds (Right side in RTL) */}
           <div className="flex-1 flex flex-col items-center justify-center">
 
             {/* ========================================================
@@ -190,6 +174,22 @@ export default function VipTradingSection({ joinedVip }: VipTradingSectionProps)
 
             </div>
 
+          </div>
+
+          {/* RIGHT SIDE - Text Content (Left side in RTL) */}
+          <div className="flex-1 flex flex-col justify-center space-y-6 lg:max-w-lg">
+            <div className="flex items-center gap-4">
+              <div className="w-3 h-3 bg-accent rotate-45 shadow-[0_0_10px_rgba(var(--accent-rgb),0.8)]"></div>
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-base-white">
+                {t('vip.title')}
+              </h2>
+            </div>
+            <p className="text-lg md:text-xl text-accent/90 leading-relaxed">
+              {t('vip.unlockDescription')}
+            </p>
+            <button className="btn-primary text-base font-bold px-8 py-3 shadow-lg hover:shadow-accent/50 transition-all rounded-xl self-start">
+              {t('vip.subscribe')}
+            </button>
           </div>
 
         </div>
