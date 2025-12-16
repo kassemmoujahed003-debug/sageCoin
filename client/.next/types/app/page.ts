@@ -1,4 +1,4 @@
-// File: C:\Users\mouja\OneDrive\Desktop\SageCoin\client\app\page.tsx
+// File: C:\Users\mouja\sageCoin\client\app\page.tsx
 import * as entry from '../../../app/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
