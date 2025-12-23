@@ -1,15 +1,17 @@
 'use client'
-
 import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import Dialog from './Dialog'
 
+type UserType = 'admin' | 'user' | 'member'
+
 interface User {
   id: string
-  name: string
+  name?: string
   email: string
-  type: 'regular' | 'subscriber' | 'vip'
-  status: 'active' | 'inactive'
+  user_type?: UserType
+  type?: UserType | 'vip' | 'subscriber' | 'regular'
+  status?: 'active' | 'inactive'
 }
 
 interface EditUserDialogProps {
@@ -27,19 +29,15 @@ export default function EditUserDialog({
 }: EditUserDialogProps) {
   const { t, isRTL } = useLanguage()
   const [formData, setFormData] = useState({
-    name: '',
     email: '',
-    type: 'regular' as User['type'],
-    status: 'active' as User['status'],
+    user_type: 'user' as UserType,
   })
 
   useEffect(() => {
     if (user) {
       setFormData({
-        name: user.name,
         email: user.email,
-        type: user.type,
-        status: user.status,
+        user_type: user.user_type || (user.type as UserType) || 'user',
       })
     }
   }, [user])
@@ -76,20 +74,6 @@ export default function EditUserDialog({
       }
     >
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Name */}
-        <div>
-          <label className={`block text-sm font-medium text-base-white mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-            {t('dashboard.dialogs.editUser.name')}
-          </label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="w-full px-4 py-2 bg-primary-dark border border-accent rounded-lg text-base-white placeholder-accent focus:outline-none focus:ring-2 focus:ring-accent"
-            required
-          />
-        </div>
-
         {/* Email */}
         <div>
           <label className={`block text-sm font-medium text-base-white mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
@@ -110,28 +94,13 @@ export default function EditUserDialog({
             {t('dashboard.dialogs.editUser.type')}
           </label>
           <select
-            value={formData.type}
-            onChange={(e) => setFormData({ ...formData, type: e.target.value as User['type'] })}
+            value={formData.user_type}
+            onChange={(e) => setFormData({ ...formData, user_type: e.target.value as UserType })}
             className="w-full px-4 py-2 bg-primary-dark border border-accent rounded-lg text-base-white focus:outline-none focus:ring-2 focus:ring-accent"
           >
-            <option value="regular">{t('dashboard.users.types.regular')}</option>
-            <option value="subscriber">{t('dashboard.users.types.subscriber')}</option>
-            <option value="vip">{t('dashboard.users.types.vip')}</option>
-          </select>
-        </div>
-
-        {/* Status */}
-        <div>
-          <label className={`block text-sm font-medium text-base-white mb-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-            {t('dashboard.dialogs.editUser.status')}
-          </label>
-          <select
-            value={formData.status}
-            onChange={(e) => setFormData({ ...formData, status: e.target.value as User['status'] })}
-            className="w-full px-4 py-2 bg-primary-dark border border-accent rounded-lg text-base-white focus:outline-none focus:ring-2 focus:ring-accent"
-          >
-            <option value="active">{t('dashboard.users.status.active')}</option>
-            <option value="inactive">{t('dashboard.users.status.inactive')}</option>
+            <option value="user">{t('dashboard.users.types.user') || 'User'}</option>
+            <option value="member">{t('dashboard.users.types.member') || 'Member'}</option>
+            <option value="admin">{t('dashboard.users.types.admin') || 'Admin'}</option>
           </select>
         </div>
       </form>

@@ -4,12 +4,10 @@ import { useMarketStatus } from '@/hooks/useMarketStatus'
 
 interface MarketStatusBadgeProps {
   market?: string
-  showPercentage?: boolean
 }
 
 export default function MarketStatusBadge({ 
-  market = 'NYSE',
-  showPercentage = true 
+  market = 'NYSE'
 }: MarketStatusBadgeProps) {
   const { marketStatus, isLoading } = useMarketStatus({ 
     market,
@@ -71,11 +69,6 @@ export default function MarketStatusBadge({
       <p className="text-base-white font-bold text-sm lg:text-base">
         {isLoading ? 'Checking...' : isOpen ? 'Market Open' : 'Market Closed'}
       </p>
-      {showPercentage && !isLoading && (
-        <p className={`text-xs font-mono mt-1 ${isOpen ? 'text-green-400' : 'text-red-400'}`}>
-          {isOpen ? '+1.24% ▲' : '0.00%'}
-        </p>
-      )}
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { LanguageProvider } from '@/contexts/LanguageContext'
 
@@ -10,6 +10,32 @@ export const metadata: Metadata = {
     shortcut: '/dark.png',
     apple: '/dark.png',
   },
+  // PWA & Mobile optimization
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'SageCoin',
+  },
+  formatDetection: {
+    telephone: true,
+    date: false,
+    email: true,
+    address: false,
+  },
+}
+
+// Viewport configuration for responsive design
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  viewportFit: 'cover',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#182231' },
+    { media: '(prefers-color-scheme: light)', color: '#182231' },
+  ],
 }
 
 export default function RootLayout({
@@ -19,7 +45,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" dir="ltr">
-      <body>
+      <head>
+        {/* Preconnect to font sources for faster loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
+      <body className="antialiased">
         <LanguageProvider>
           {children}
         </LanguageProvider>
@@ -27,4 +58,3 @@ export default function RootLayout({
     </html>
   )
 }
-

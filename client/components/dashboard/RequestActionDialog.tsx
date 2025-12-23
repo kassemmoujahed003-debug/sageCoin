@@ -7,7 +7,8 @@ import Dialog from './Dialog'
 interface Request {
   id: string
   type: 'password' | 'leverage' | 'withdraw' | 'deposit'
-  userName: string
+  userName?: string
+  userEmail?: string
   details: string
 }
 
@@ -15,8 +16,8 @@ interface RequestActionDialogProps {
   isOpen: boolean
   onClose: () => void
   request: Request | null
-  action: 'approve' | 'reject' | 'pending'
-  onConfirm: (action: 'approve' | 'reject' | 'pending', notes?: string) => void
+  action: 'done' | 'reject' | 'pending'
+  onConfirm: (action: 'done' | 'reject' | 'pending', notes?: string) => void
 }
 
 export default function RequestActionDialog({
@@ -38,13 +39,13 @@ export default function RequestActionDialog({
   if (!request) return null
 
   const actionLabels = {
-    approve: t('dashboard.dialogs.requestAction.approve'),
-    reject: t('dashboard.dialogs.requestAction.reject'),
-    pending: t('dashboard.dialogs.requestAction.setPending'),
+    done: t('dashboard.dialogs.requestAction.approve') || 'Mark as Done',
+    reject: t('dashboard.dialogs.requestAction.reject') || 'Reject',
+    pending: t('dashboard.dialogs.requestAction.setPending') || 'Set Pending',
   }
 
   const actionColors = {
-    approve: 'bg-green-500 bg-opacity-20 text-green-400 border-green-500 border-opacity-30',
+    done: 'bg-green-500 bg-opacity-20 text-green-400 border-green-500 border-opacity-30',
     reject: 'bg-red-500 bg-opacity-20 text-red-400 border-red-500 border-opacity-30',
     pending: 'bg-yellow-500 bg-opacity-20 text-yellow-400 border-yellow-500 border-opacity-30',
   }
@@ -66,7 +67,7 @@ export default function RequestActionDialog({
           <button
             onClick={handleConfirm}
             className={`px-6 py-2 rounded-lg hover:opacity-80 transition-colors font-medium border ${
-              action === 'approve' ? actionColors.approve :
+              action === 'done' ? actionColors.done :
               action === 'reject' ? actionColors.reject :
               actionColors.pending
             }`}
@@ -81,7 +82,7 @@ export default function RequestActionDialog({
           <p className="text-accent text-sm mb-2">
             {t('dashboard.dialogs.requestAction.user')}
           </p>
-          <p className="text-base-white font-medium">{request.userName}</p>
+          <p className="text-base-white font-medium">{request.userEmail || request.userName}</p>
         </div>
 
         <div>

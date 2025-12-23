@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getMarketStatus } from '@/services/marketStatusService'
 
 /**
- * Next.js API Route to proxy Is-Market-Open API
- * This avoids CORS issues and allows server-side caching
+ * Next.js API Route to get market status using static data
  * 
  * Usage: GET /api/market-status?market=NYSE
  */
@@ -12,42 +12,22 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const market = searchParams.get('market') || 'NYSE'
 
-    // Validate market parameter
-    const validMarkets = ['NYSE', 'NASDAQ', 'LSE', 'TSE', 'HKEX', 'SSE', 'ASX', 'BSE', 'NSE']
-    if (!validMarkets.includes(market.toUpperCase())) {
+    // Get market status from static data service
+    const marketStatus = await getMarketStatus(market)
+
+    // If there's an error in the market status, return it
+    if (marketStatus.error) {
       return NextResponse.json(
-        { error: `Invalid market. Valid markets: ${validMarkets.join(', ')}` },
+        marketStatus,
         { status: 400 }
       )
     }
 
-    // Fetch from Is-Market-Open API
-    // Free tier: 1,000 calls/month per IP
-    const apiUrl = `https://is-market-open.info/api/v1/${market.toUpperCase()}`
-    
-    const response = await fetch(apiUrl, {
-      method: 'GET',
+    return NextResponse.json(marketStatus, {
+      // Cache for 30 seconds to reduce computation
       headers: {
-        'Accept': 'application/json',
-        'User-Agent': 'SageCoin/1.0',
+        'Cache-Control': 'public, s-maxage=30, stale-while-revalidate=60',
       },
-      // Cache for 30 seconds to reduce API calls
-      next: { revalidate: 30 },
-    })
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status} ${response.statusText}`)
-    }
-
-    const data = await response.json()
-
-    return NextResponse.json({
-      isOpen: data.isOpen || false,
-      market: data.market || market.toUpperCase(),
-      timezone: data.timezone || 'America/New_York',
-      currentTime: data.currentTime || new Date().toISOString(),
-      nextOpen: data.nextOpen,
-      nextClose: data.nextClose,
     })
   } catch (error) {
     console.error('Error fetching market status:', error)

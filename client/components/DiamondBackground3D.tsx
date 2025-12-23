@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useState, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Mesh } from 'three'
 
@@ -101,12 +101,84 @@ function DiamondScene() {
 
 // Main component that wraps the Canvas
 export default function DiamondBackground3D() {
+  const [webglError, setWebglError] = useState(false)
+
+  useEffect(() => {
+    // Check if WebGL is available
+    try {
+      const canvas = document.createElement('canvas')
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
+      if (!gl) {
+        setWebglError(true)
+        return
+      }
+      
+      // Check for context loss
+      canvas.addEventListener('webglcontextlost', (event) => {
+        event.preventDefault()
+        setWebglError(true)
+      }, { once: true })
+    } catch (error) {
+      console.warn('WebGL check failed, using fallback:', error)
+      setWebglError(true)
+    }
+    
+    // Global error handler for WebGL errors
+    const handleWebGLError = (event: ErrorEvent) => {
+      if (event.message && event.message.includes('WebGL')) {
+        console.warn('WebGL error detected, using fallback:', event.message)
+        setWebglError(true)
+      }
+    }
+    
+    window.addEventListener('error', handleWebGLError)
+    return () => {
+      window.removeEventListener('error', handleWebGLError)
+    }
+  }, [])
+
+  // Fallback to simple gradient background if WebGL is not available
+  if (webglError) {
+    return (
+      <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-primary-dark to-accent/5"></div>
+      </div>
+    )
+  }
+
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
       <Canvas
         camera={{ position: [0, 0, 10], fov: 75 }}
-        gl={{ alpha: true, antialias: true }}
+        gl={{ 
+          alpha: true, 
+          antialias: true,
+          powerPreference: 'high-performance',
+          failIfMajorPerformanceCaveat: false
+        }}
         style={{ background: 'transparent' }}
+        onCreated={({ gl }) => {
+          try {
+            // Handle WebGL context loss
+            const canvas = gl.domElement
+            canvas.addEventListener('webglcontextlost', (event) => {
+              event.preventDefault()
+              setWebglError(true)
+            }, { once: true })
+            
+            canvas.addEventListener('webglcontextrestored', () => {
+              // Context restored, but we'll keep the fallback for stability
+              console.log('WebGL context restored')
+            }, { once: true })
+          } catch (error) {
+            console.warn('Error setting up WebGL context handlers:', error)
+            setWebglError(true)
+          }
+        }}
+        onError={(error) => {
+          console.warn('WebGL error, falling back to gradient:', error)
+          setWebglError(true)
+        }}
       >
         <DiamondScene />
       </Canvas>

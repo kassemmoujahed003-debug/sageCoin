@@ -1,100 +1,157 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
+import { useAuth } from '@/hooks/useAuth'
 import RequestActionDialog from './RequestActionDialog'
 
-type RequestType = 'all' | 'password' | 'leverage' | 'withdraw' | 'deposit'
-type RequestStatus = 'all' | 'pending' | 'approved' | 'rejected'
+type RequestType = 'all' | 'password' | 'withdraw' | 'deposit'
+type RequestStatus = 'all' | 'pending' | 'done' | 'rejected'
+
+interface Transaction {
+  id: string
+  type: 'password_change' | 'withdrawal' | 'deposit'
+  status: 'pending' | 'done' | 'rejected'
+  data: any
+  createdAt: string
+  updatedAt: string
+  userId: string | null
+  userEmail: string
+}
 
 interface Request {
   id: string
-  userId: string
-  userName: string
+  userId: string | null
   userEmail: string
-  type: 'password' | 'leverage' | 'withdraw' | 'deposit'
-  status: 'pending' | 'approved' | 'rejected'
+  userName?: string // Optional since we might not have it
+  type: 'password' | 'withdraw' | 'deposit'
+  status: 'pending' | 'done' | 'rejected'
   details: string
   amount?: number
-  newLeverage?: number
+  accountNumber?: string
   createdAt: string
 }
 
 export default function RequestList() {
   const { t, isRTL } = useLanguage()
+  const { token } = useAuth()
   const [typeFilter, setTypeFilter] = useState<RequestType>('all')
   const [statusFilter, setStatusFilter] = useState<RequestStatus>('all')
   const [searchQuery, setSearchQuery] = useState('')
   const [actionDialogOpen, setActionDialogOpen] = useState(false)
   const [selectedRequest, setSelectedRequest] = useState<Request | null>(null)
-  const [actionType, setActionType] = useState<'approve' | 'reject' | 'pending'>('approve')
+  const [actionType, setActionType] = useState<'done' | 'reject' | 'pending'>('done')
+  const [requests, setRequests] = useState<Request[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // Mock data - replace with API call
-  const requests: Request[] = [
-    {
-      id: '1',
-      userId: '1',
-      userName: 'John Doe',
-      userEmail: 'john@example.com',
-      type: 'password',
-      status: 'pending',
-      details: 'Password change request',
-      createdAt: '2024-03-15T10:30:00',
-    },
-    {
-      id: '2',
-      userId: '2',
-      userName: 'Jane Smith',
-      userEmail: 'jane@example.com',
-      type: 'leverage',
-      status: 'pending',
-      details: 'Change leverage to 200x',
-      newLeverage: 200,
-      createdAt: '2024-03-15T11:15:00',
-    },
-    {
-      id: '3',
-      userId: '3',
-      userName: 'Ahmed Ali',
-      userEmail: 'ahmed@example.com',
-      type: 'withdraw',
-      status: 'pending',
-      details: 'Withdrawal request',
-      amount: 5000,
-      createdAt: '2024-03-15T12:00:00',
-    },
-    {
-      id: '4',
-      userId: '4',
-      userName: 'Sarah Johnson',
-      userEmail: 'sarah@example.com',
-      type: 'deposit',
-      status: 'approved',
-      details: 'Deposit request',
-      amount: 10000,
-      createdAt: '2024-03-14T09:20:00',
-    },
-    {
-      id: '5',
-      userId: '5',
-      userName: 'Mohammed Hassan',
-      userEmail: 'mohammed@example.com',
-      type: 'leverage',
-      status: 'rejected',
-      details: 'Change leverage to 500x',
-      newLeverage: 500,
-      createdAt: '2024-03-13T14:45:00',
-    },
-  ]
+  // Load transactions from API
+  useEffect(() => {
+    if (token) {
+      loadTransactions()
+    }
+  }, [typeFilter, statusFilter, token])
+
+  const loadTransactions = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
+      if (!token) {
+        setError('Not authenticated')
+        setIsLoading(false)
+        return
+      }
+
+      // Build query params
+      const params = new URLSearchParams()
+      if (typeFilter !== 'all') {
+        // Map UI types to API types
+        const typeMap: Record<string, string> = {
+          'password': 'password_change',
+          'withdraw': 'withdrawal',
+          'deposit': 'deposit',
+        }
+        params.append('type', typeMap[typeFilter] || typeFilter)
+      }
+      if (statusFilter !== 'all') {
+        params.append('status', statusFilter)
+      }
+
+      const response = await fetch(`/api/admin/transactions?${params.toString()}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        const errorMessage = errorData.details || errorData.error || 'Failed to load transactions'
+        const hint = errorData.hint || ''
+        throw new Error(`${errorMessage}${hint ? ` - ${hint}` : ''}`)
+      }
+
+      const { transactions } = await response.json()
+      
+      // Transform transactions to requests format
+      const formattedRequests: Request[] = transactions.map((tx: Transaction) => {
+        let type: 'password' | 'withdraw' | 'deposit' = 'password'
+        if (tx.type === 'withdrawal') type = 'withdraw'
+        if (tx.type === 'deposit') type = 'deposit'
+        if (tx.type === 'password_change') type = 'password'
+
+        let details = ''
+        let amount: number | undefined
+        let accountNumber: string | undefined
+
+        if (tx.type === 'password_change') {
+          details = `Password change request`
+          accountNumber = tx.data?.accountNumber
+        } else if (tx.type === 'withdrawal' || tx.type === 'deposit') {
+          amount = tx.data?.amount
+          accountNumber = tx.data?.accountNumber
+          details = `${tx.type === 'withdrawal' ? 'Withdrawal' : 'Deposit'} request`
+          if (tx.data?.note) {
+            details += ` - ${tx.data.note}`
+          }
+        }
+
+        return {
+          id: tx.id,
+          userId: tx.userId,
+          userEmail: tx.userEmail,
+          type,
+          status: tx.status,
+          details,
+          amount,
+          accountNumber,
+          createdAt: tx.createdAt,
+        }
+      })
+
+      setRequests(formattedRequests)
+    } catch (err) {
+      console.error('Error loading transactions:', err)
+      setError(err instanceof Error ? err.message : 'Failed to load transactions')
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   // Filter requests
   const filteredRequests = requests.filter((request) => {
     const matchesType = typeFilter === 'all' || request.type === typeFilter
     const matchesStatus = statusFilter === 'all' || request.status === statusFilter
-    const matchesSearch =
-      request.userName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      request.userEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      request.details.toLowerCase().includes(searchQuery.toLowerCase())
+    
+    // Safe search - handle undefined values
+    const searchLower = searchQuery.toLowerCase()
+    const matchesSearch = searchQuery === '' || (
+      (request.userName?.toLowerCase() || '').includes(searchLower) ||
+      (request.userEmail?.toLowerCase() || '').includes(searchLower) ||
+      (request.details?.toLowerCase() || '').includes(searchLower) ||
+      (request.accountNumber?.toLowerCase() || '').includes(searchLower)
+    )
+    
     return matchesType && matchesStatus && matchesSearch
   })
 
@@ -102,12 +159,12 @@ export default function RequestList() {
     switch (type) {
       case 'password':
         return 'bg-purple-500 bg-opacity-20 text-purple-400 border-purple-500 border-opacity-30'
-      case 'leverage':
-        return 'bg-blue-500 bg-opacity-20 text-blue-400 border-blue-500 border-opacity-30'
       case 'withdraw':
         return 'bg-red-500 bg-opacity-20 text-red-400 border-red-500 border-opacity-30'
       case 'deposit':
         return 'bg-green-500 bg-opacity-20 text-green-400 border-green-500 border-opacity-30'
+      default:
+        return 'bg-blue-500 bg-opacity-20 text-blue-400 border-blue-500 border-opacity-30'
     }
   }
 
@@ -115,23 +172,59 @@ export default function RequestList() {
     switch (status) {
       case 'pending':
         return 'bg-yellow-500 bg-opacity-20 text-yellow-400'
-      case 'approved':
+      case 'done':
         return 'bg-green-500 bg-opacity-20 text-green-400'
       case 'rejected':
         return 'bg-red-500 bg-opacity-20 text-red-400'
     }
   }
 
-  const handleAction = (request: Request, action: 'approve' | 'reject' | 'pending') => {
+  const handleAction = (request: Request, action: 'done' | 'reject' | 'pending') => {
     setSelectedRequest(request)
     setActionType(action)
     setActionDialogOpen(true)
   }
 
-  const handleConfirmAction = (action: 'approve' | 'reject' | 'pending', notes?: string) => {
-    // TODO: Implement API call to update request status
-    console.log('Update request:', selectedRequest?.id, action, notes)
-    // Refresh requests list after update
+  const handleConfirmAction = async (action: 'done' | 'reject' | 'pending', notes?: string) => {
+    if (!selectedRequest || !token) {
+      setError('Not authenticated')
+      return
+    }
+
+    try {
+
+      // Map action to status
+      const statusMap: Record<string, string> = {
+        'done': 'done',
+        'reject': 'rejected',
+        'pending': 'pending',
+      }
+      const status = statusMap[action] || action
+
+      const response = await fetch(`/api/admin/transactions/${selectedRequest.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status,
+          adminNotes: notes,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to update transaction')
+      }
+
+      // Refresh list
+      await loadTransactions()
+      setActionDialogOpen(false)
+      setSelectedRequest(null)
+    } catch (err) {
+      console.error('Error updating transaction:', err)
+      setError(err instanceof Error ? err.message : 'Failed to update transaction')
+    }
   }
 
   return (
@@ -157,7 +250,7 @@ export default function RequestList() {
               {t('dashboard.requests.filters.type')}
             </label>
             <div className="flex gap-2 flex-wrap">
-              {(['all', 'password', 'leverage', 'withdraw', 'deposit'] as RequestType[]).map(
+              {(['all', 'password', 'withdraw', 'deposit'] as RequestType[]).map(
                 (type) => (
                   <button
                     key={type}
@@ -181,7 +274,7 @@ export default function RequestList() {
               {t('dashboard.requests.filters.status')}
             </label>
             <div className="flex gap-2 flex-wrap">
-              {(['all', 'pending', 'approved', 'rejected'] as RequestStatus[]).map((status) => (
+              {(['all', 'pending', 'done', 'rejected'] as RequestStatus[]).map((status) => (
                 <button
                   key={status}
                   onClick={() => setStatusFilter(status)}
@@ -212,9 +305,9 @@ export default function RequestList() {
           </div>
         </div>
         <div className="bg-secondary-surface border border-accent rounded-lg p-4">
-          <div className="text-accent text-sm mb-1">{t('dashboard.requests.stats.approved')}</div>
+          <div className="text-accent text-sm mb-1">{t('dashboard.requests.stats.done') || 'Done'}</div>
           <div className="text-2xl font-bold text-green-400">
-            {requests.filter((r) => r.status === 'approved').length}
+            {requests.filter((r) => r.status === 'done').length}
           </div>
         </div>
         <div className="bg-secondary-surface border border-accent rounded-lg p-4">
@@ -225,9 +318,24 @@ export default function RequestList() {
         </div>
       </div>
 
+      {/* Error Message */}
+      {error && (
+        <div className="bg-red-500/10 border border-red-500 rounded-lg p-4 text-red-400">
+          {error}
+        </div>
+      )}
+
+      {/* Loading State */}
+      {isLoading && (
+        <div className="bg-secondary-surface border border-accent rounded-xl p-8 text-center text-accent">
+          Loading transactions...
+        </div>
+      )}
+
       {/* Requests List */}
-      <div className="space-y-4">
-        {filteredRequests.map((request) => (
+      {!isLoading && (
+        <div className="space-y-4">
+          {filteredRequests.map((request) => (
           <div
             key={request.id}
             className="bg-secondary-surface border border-accent rounded-xl p-6 hover:bg-opacity-80 transition-all"
@@ -260,9 +368,9 @@ export default function RequestList() {
                       ${request.amount.toLocaleString()}
                     </span>
                   )}
-                  {request.newLeverage && (
-                    <span className="text-base-white font-semibold ml-2">
-                      {request.newLeverage}x
+                  {request.accountNumber && (
+                    <span className="text-accent ml-2">
+                      (Account: {request.accountNumber})
                     </span>
                   )}
                 </div>
@@ -274,12 +382,12 @@ export default function RequestList() {
 
               {/* Right Side - Actions */}
               <div className={`flex gap-2 flex-wrap ${isRTL ? 'flex-row-reverse' : ''}`}>
-                {request.status !== 'approved' && (
+                {request.status !== 'done' && (
                   <button
-                    onClick={() => handleAction(request, 'approve')}
+                    onClick={() => handleAction(request, 'done')}
                     className="px-4 py-2 bg-green-500 bg-opacity-20 text-green-400 rounded-lg hover:bg-opacity-30 transition-colors font-medium text-sm border border-green-500 border-opacity-30"
                   >
-                    {t('dashboard.requests.approve')}
+                    {t('dashboard.requests.approve') || 'Mark as Done'}
                   </button>
                 )}
                 {request.status !== 'rejected' && (
@@ -287,7 +395,7 @@ export default function RequestList() {
                     onClick={() => handleAction(request, 'reject')}
                     className="px-4 py-2 bg-red-500 bg-opacity-20 text-red-400 rounded-lg hover:bg-opacity-30 transition-colors font-medium text-sm border border-red-500 border-opacity-30"
                   >
-                    {t('dashboard.requests.reject')}
+                    {t('dashboard.requests.reject') || 'Reject'}
                   </button>
                 )}
                 {request.status !== 'pending' && (
@@ -295,7 +403,7 @@ export default function RequestList() {
                     onClick={() => handleAction(request, 'pending')}
                     className="px-4 py-2 bg-yellow-500 bg-opacity-20 text-yellow-400 rounded-lg hover:bg-opacity-30 transition-colors font-medium text-sm border border-yellow-500 border-opacity-30"
                   >
-                    {t('dashboard.requests.setPending')}
+                    {t('dashboard.requests.setPending') || 'Set Pending'}
                   </button>
                 )}
               </div>
@@ -303,12 +411,13 @@ export default function RequestList() {
           </div>
         ))}
 
-        {filteredRequests.length === 0 && (
-          <div className="bg-secondary-surface border border-accent rounded-xl p-8 text-center text-accent">
-            {t('dashboard.requests.noRequests')}
-          </div>
-        )}
-      </div>
+          {filteredRequests.length === 0 && (
+            <div className="bg-secondary-surface border border-accent rounded-xl p-8 text-center text-accent">
+              {t('dashboard.requests.noRequests') || 'No requests found'}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Action Dialog */}
       <RequestActionDialog

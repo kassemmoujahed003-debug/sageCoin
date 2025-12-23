@@ -32,16 +32,13 @@ export default function LanguageSwitcher({ isScrolled = false }: LanguageSwitche
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center ${isRTL ? 'space-x-reverse space-x-2 flex-row-reverse' : 'space-x-2'} px-4 py-2 rounded-lg ${buttonStyles} hover:opacity-80 transition-all duration-200`}
+        className={`flex items-center justify-center ${isRTL ? 'space-x-reverse space-x-1 flex-row-reverse' : 'space-x-1'} px-2 py-1.5 rounded-lg ${buttonStyles} hover:opacity-80 transition-all duration-200 text-xs font-medium min-w-[2.5rem]`}
         aria-label="Change language"
         aria-expanded={isOpen}
       >
-        <span className="text-lg">{currentLanguage.flag}</span>
-        <span className="text-sm font-medium hidden sm:inline">
-          {currentLanguage.label}
-        </span>
+        <span>{currentLanguage.code.toUpperCase()}</span>
         <svg
-          className={`w-4 h-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+          className={`w-3 h-3 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -61,20 +58,19 @@ export default function LanguageSwitcher({ isScrolled = false }: LanguageSwitche
             className="fixed inset-0 z-10"
             onClick={() => setIsOpen(false)}
           />
-          <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-full mt-2 bg-secondary-surface border border-accent rounded-lg shadow-lg z-20 min-w-[150px]`}>
+          <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-full mt-2 bg-secondary-surface border border-accent rounded-lg shadow-lg z-20 min-w-[80px]`}>
             {languages.map((lang) => (
               <button
                 key={lang.code}
                 onClick={() => handleLanguageChange(lang.code)}
-                className={`w-full ${isRTL ? 'text-right' : 'text-left'} px-4 py-2 flex items-center ${isRTL ? 'space-x-reverse space-x-2 flex-row-reverse' : 'space-x-2'} hover:bg-primary-dark transition-colors first:rounded-t-lg last:rounded-b-lg ${
+                className={`w-full ${isRTL ? 'text-right' : 'text-left'} px-3 py-2 flex items-center justify-center hover:bg-primary-dark transition-colors first:rounded-t-lg last:rounded-b-lg text-xs font-medium ${
                   language === lang.code ? 'bg-primary-dark bg-opacity-50' : ''
                 }`}
               >
-                <span className="text-lg">{lang.flag}</span>
-                <span className="text-sm text-base-white">{lang.label}</span>
+                <span className="text-base-white">{lang.code.toUpperCase()}</span>
                 {language === lang.code && (
                   <svg
-                    className={`w-4 h-4 text-accent ${isRTL ? 'mr-auto' : 'ml-auto'}`}
+                    className={`w-3 h-3 text-accent ${isRTL ? 'mr-1' : 'ml-1'}`}
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >

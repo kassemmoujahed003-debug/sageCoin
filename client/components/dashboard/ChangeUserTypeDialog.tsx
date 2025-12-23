@@ -7,14 +7,17 @@ import Dialog from './Dialog'
 interface User {
   id: string
   name: string
-  type: 'regular' | 'subscriber' | 'vip'
+  user_type?: 'admin' | 'user' | 'member'
+  type?: 'admin' | 'user' | 'member' // For backward compatibility
 }
+
+type UserType = 'admin' | 'user' | 'member'
 
 interface ChangeUserTypeDialogProps {
   isOpen: boolean
   onClose: () => void
   user: User | null
-  onConfirm: (newType: User['type']) => void
+  onConfirm: (newType: UserType) => void
 }
 
 export default function ChangeUserTypeDialog({
@@ -24,11 +27,11 @@ export default function ChangeUserTypeDialog({
   onConfirm,
 }: ChangeUserTypeDialogProps) {
   const { t, isRTL } = useLanguage()
-  const [newType, setNewType] = useState<User['type']>('regular')
+  const [newType, setNewType] = useState<UserType>('user')
 
   useEffect(() => {
     if (user) {
-      setNewType(user.type)
+      setNewType((user.user_type || user.type || 'user') as UserType)
     }
   }, [user])
 
@@ -72,12 +75,12 @@ export default function ChangeUserTypeDialog({
           </label>
           <select
             value={newType}
-            onChange={(e) => setNewType(e.target.value as User['type'])}
+            onChange={(e) => setNewType(e.target.value as UserType)}
             className="w-full px-4 py-2 bg-primary-dark border border-accent rounded-lg text-base-white focus:outline-none focus:ring-2 focus:ring-accent"
           >
-            <option value="regular">{t('dashboard.users.types.regular')}</option>
-            <option value="subscriber">{t('dashboard.users.types.subscriber')}</option>
-            <option value="vip">{t('dashboard.users.types.vip')}</option>
+            <option value="admin">{t('dashboard.users.types.admin')}</option>
+            <option value="user">{t('dashboard.users.types.user')}</option>
+            <option value="member">{t('dashboard.users.types.member')}</option>
           </select>
         </div>
       </div>

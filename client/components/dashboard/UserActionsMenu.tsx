@@ -7,8 +7,9 @@ interface User {
   id: string
   name: string
   email: string
-  type: 'regular' | 'subscriber' | 'vip'
-  status: 'active' | 'inactive'
+  user_type?: 'admin' | 'user' | 'member'
+  type?: 'admin' | 'user' | 'member' | 'vip' | 'subscriber' | 'regular'
+  status?: 'active' | 'inactive'
 }
 
 interface UserActionsMenuProps {
