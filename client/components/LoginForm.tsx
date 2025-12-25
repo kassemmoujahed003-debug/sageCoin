@@ -63,13 +63,58 @@ export default function LoginForm() {
           throw new Error(data.error || 'Registration failed')
         }
 
+        // If we have a session from signup, use it
         if (data.session?.access_token) {
           localStorage.setItem('supabase_token', data.session.access_token)
           localStorage.setItem('user', JSON.stringify(data.user))
-        }
+          router.push('/dashboard')
+          router.refresh()
+        } else {
+          // If no session was returned, automatically log in the user
+          // This ensures they're authenticated immediately after signup
+          try {
+            const loginResponse = await fetch('/api/auth/login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email,
+                password,
+              }),
+            })
 
-        router.push('/dashboard')
-        router.refresh()
+            const loginContentType = loginResponse.headers.get('content-type')
+            if (!loginContentType || !loginContentType.includes('application/json')) {
+              const text = await loginResponse.text()
+              console.error('Non-JSON response from login:', text)
+              throw new Error('Failed to log in after signup')
+            }
+
+            const loginData = await loginResponse.json()
+
+            if (!loginResponse.ok) {
+              throw new Error(loginData.error || 'Failed to log in after signup')
+            }
+
+            if (loginData.session?.access_token) {
+              localStorage.setItem('supabase_token', loginData.session.access_token)
+              localStorage.setItem('user', JSON.stringify(loginData.user))
+            }
+
+            router.push('/dashboard')
+            router.refresh()
+          } catch (loginErr) {
+            // If auto-login fails, show error but don't redirect to login
+            // The user was successfully created, they just need to log in manually
+            setError('Account created successfully! Please log in with your email and password.')
+            setIsLoading(false)
+            // Switch to login mode so they can log in immediately
+            setMode('login')
+            setPassword('')
+            setConfirmPassword('')
+          }
+        }
       } else {
         const response = await fetch('/api/auth/login', {
           method: 'POST',

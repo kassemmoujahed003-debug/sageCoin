@@ -5,7 +5,8 @@ import { useState, useEffect, useCallback } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { useAuth } from '@/hooks/useAuth'
 import { isMember, isAdmin } from '@/lib/auth-utils'
-import LanguageSwitcher from './LanguageSwitcher'
+import Profile from './Profile'
+import LanguageSwitch from './LanguageSwitch'
 
 export default function Navbar() {
   const { t, isRTL } = useLanguage()
@@ -130,24 +131,7 @@ export default function Navbar() {
             <nav className={`hidden lg:flex items-center ${isRTL ? 'space-x-reverse space-x-8' : 'space-x-8'}`}>
               {isRTL ? (
                 <>
-                  <LanguageSwitcher isScrolled={isScrolled} />
-                  {isAuthenticated ? (
-                    <button
-                      onClick={handleLogout}
-                      className={isScrolled ? "btn-primary" : "btn-primary bg-primary-dark border-primary-dark text-base-white hover:bg-opacity-90"}
-                      style={buttonBaseStyle}
-                    >
-                      {t('nav.logout')}
-                    </button>
-                  ) : (
-                    <Link 
-                      href="/login" 
-                      className={isScrolled ? "btn-primary" : "btn-primary bg-primary-dark border-primary-dark text-base-white hover:bg-opacity-90"}
-                      style={buttonBaseStyle}
-                    >
-                      {t('nav.login')}
-                    </Link>
-                  )}
+                  <Profile isScrolled={isScrolled} onLogout={handleLogout} />
                   {userIsAdminUser && (
                     <Link href="/dashboard" className={navLinkClasses}>
                       {t('nav.dashboard')}
@@ -159,9 +143,11 @@ export default function Navbar() {
                   <Link href="/" className={navLinkClasses}>
                     {t('nav.home')}
                   </Link>
+                  <LanguageSwitch isScrolled={isScrolled} />
                 </>
               ) : (
                 <>
+                  <LanguageSwitch isScrolled={isScrolled} />
                   <Link href="/" className={navLinkClasses}>
                     {t('nav.home')}
                   </Link>
@@ -173,24 +159,7 @@ export default function Navbar() {
                       {t('nav.dashboard')}
                     </Link>
                   )}
-                  {isAuthenticated ? (
-                    <button
-                      onClick={handleLogout}
-                      className={isScrolled ? "btn-primary" : "btn-primary bg-primary-dark border-primary-dark text-base-white hover:bg-opacity-90"}
-                      style={buttonBaseStyle}
-                    >
-                      {t('nav.logout')}
-                    </button>
-                  ) : (
-                    <Link 
-                      href="/login" 
-                      className={isScrolled ? "btn-primary" : "btn-primary bg-primary-dark border-primary-dark text-base-white hover:bg-opacity-90"}
-                      style={buttonBaseStyle}
-                    >
-                      {t('nav.login')}
-                    </Link>
-                  )}
-                  <LanguageSwitcher isScrolled={isScrolled} />
+                  <Profile isScrolled={isScrolled} onLogout={handleLogout} />
                 </>
               )}
             </nav>
@@ -198,7 +167,7 @@ export default function Navbar() {
             {/* Mobile menu button */}
             <div className="lg:hidden">
               <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-2 flex-row-reverse' : 'space-x-2'}`}>
-                <LanguageSwitcher isScrolled={isScrolled} />
+                <Profile isScrolled={isScrolled} onLogout={handleLogout} />
                 <button
                   onClick={handleOpenMenu}
                   className={`relative w-10 h-10 flex items-center justify-center transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-accent rounded-lg ${
@@ -271,6 +240,11 @@ export default function Navbar() {
           <div className="flex flex-col h-[calc(100%-5rem)] overflow-y-auto">
             {/* Navigation Links */}
             <nav className="flex-1 px-4 py-6 space-y-2">
+              {/* Language Switch - First item */}
+              <div className="px-4 py-4">
+                <LanguageSwitch isScrolled={false} />
+              </div>
+
               <Link 
                 href="/" 
                 className="menu-item-animate flex items-center gap-3 px-4 py-4 text-base-white hover:bg-accent/10 rounded-xl transition-colors group"
@@ -315,32 +289,6 @@ export default function Navbar() {
 
             {/* Bottom Section */}
             <div className="mt-auto px-4 py-6 border-t border-accent/20 space-y-4 safe-area-inset">
-              {isAuthenticated ? (
-                <button
-                  onClick={() => {
-                    handleLogout()
-                    handleCloseMenu()
-                  }}
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-accent/10 hover:bg-accent/20 text-base-white font-semibold rounded-xl transition-colors border border-accent/30"
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                  {t('nav.logout')}
-                </button>
-              ) : (
-                <Link 
-                  href="/login" 
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-accent text-primary-dark font-semibold rounded-xl transition-colors hover:bg-accent/90"
-                  onClick={handleCloseMenu}
-                >
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-                  </svg>
-                  {t('nav.login')}
-                </Link>
-              )}
-
               {/* App-like bottom indicator */}
               <div className="flex justify-center pt-2">
                 <div className="w-32 h-1 bg-accent/30 rounded-full"></div>

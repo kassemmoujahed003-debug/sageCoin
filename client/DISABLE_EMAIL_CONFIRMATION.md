@@ -33,16 +33,16 @@ The registration API route now automatically confirms users when a service role 
    - ⚠️ **WARNING**: This key is secret and should NEVER be exposed to the client
    - Only use it in server-side code (API routes)
 
-### Step 2: Add to .env.local
+### Step 2: Add to .env
 
-Add this line to your `client/.env.local` file:
+Add this line to your `client/.env` file (or `.env.local` if you're using that):
 
 ```env
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key-here
 ```
 
 **Important:**
-- ✅ Add this to `.env.local` (which is gitignored)
+- ✅ Add this to `.env` or `.env.local` (make sure it's gitignored)
 - ❌ Never commit this key to git
 - ❌ Never use this key in client-side code
 - ✅ Only use it in server-side API routes
@@ -79,7 +79,7 @@ After configuring, test it:
    - Go to: https://supabase.com/dashboard/project/apocthoyjbbetumecndc/auth/providers
 
 2. **Check Service Role Key**
-   - Make sure `SUPABASE_SERVICE_ROLE_KEY` is set in `.env.local`
+   - Make sure `SUPABASE_SERVICE_ROLE_KEY` is set in `.env` (or `.env.local`)
    - Make sure you're using the **service_role** key, not the anon key
    - Restart your dev server after adding it
 

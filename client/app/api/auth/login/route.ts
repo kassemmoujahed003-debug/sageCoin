@@ -23,6 +23,45 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // First, try to confirm the email if it's not confirmed (proactive approach)
+    // This prevents the "Email not confirmed" error from happening
+    try {
+      const { createAdminClient } = await import('@/lib/supabase')
+      const adminClient = createAdminClient()
+      
+      // Get user by email from admin API
+      const { data: { users }, error: listError } = await adminClient.auth.admin.listUsers()
+      
+      if (!listError && users) {
+        const userToConfirm = users.find(u => u.email?.toLowerCase() === email.toLowerCase())
+        if (userToConfirm && !userToConfirm.email_confirmed_at) {
+          // Confirm the email before attempting login
+          const { error: confirmError } = await adminClient.auth.admin.updateUserById(
+            userToConfirm.id,
+            { 
+              email_confirm: true,
+              ban_duration: 'none'
+            }
+          )
+          
+          if (!confirmError) {
+            console.log('Email auto-confirmed before login for:', email)
+            // Small delay to ensure the confirmation is processed
+            await new Promise(resolve => setTimeout(resolve, 100))
+          } else {
+            console.warn('Failed to auto-confirm email before login:', confirmError.message)
+          }
+        }
+      }
+    } catch (confirmErr) {
+      // If we can't confirm proactively, we'll try after login fails
+      const errorMsg = confirmErr instanceof Error ? confirmErr.message : 'Unknown error'
+      console.warn('Could not proactively confirm email:', errorMsg)
+      if (errorMsg.includes('SUPABASE_SERVICE_ROLE_KEY')) {
+        console.warn('Please set SUPABASE_SERVICE_ROLE_KEY in your .env file to enable automatic email confirmation.')
+      }
+    }
+
     // Sign in with Supabase Auth
     let authData: any = null
     let authError: any = null
@@ -35,7 +74,7 @@ export async function POST(request: NextRequest) {
     authData = signInResult.data
     authError = signInResult.error
 
-    // If login fails due to email not confirmed, auto-confirm and retry
+    // If login still fails due to email not confirmed, try to confirm and retry
     if (authError && (authError.message?.toLowerCase().includes('email not confirmed') || authError.message?.toLowerCase().includes('email_not_confirmed'))) {
       try {
         // Auto-confirm the email using admin client
@@ -51,11 +90,16 @@ export async function POST(request: NextRequest) {
             // Confirm the email
             const { error: confirmError } = await adminClient.auth.admin.updateUserById(
               userToConfirm.id,
-              { email_confirm: true }
+              { 
+                email_confirm: true,
+                ban_duration: 'none'
+              }
             )
             
             if (!confirmError) {
-              console.log('Email auto-confirmed for:', email)
+              console.log('Email auto-confirmed during login retry for:', email)
+              // Small delay to ensure the confirmation is processed
+              await new Promise(resolve => setTimeout(resolve, 100))
               // Retry login after confirmation
               const retryResult = await supabase.auth.signInWithPassword({
                 email,
@@ -65,12 +109,17 @@ export async function POST(request: NextRequest) {
               if (!retryResult.error && retryResult.data) {
                 authData = retryResult.data
                 authError = null
+              } else {
+                // If retry still fails, use the retry error
+                authError = retryResult.error
               }
+            } else {
+              console.error('Failed to confirm email during login retry:', confirmError.message)
             }
           }
         }
       } catch (confirmErr) {
-        console.warn('Could not auto-confirm email during login:', confirmErr)
+        console.error('Could not auto-confirm email during login:', confirmErr instanceof Error ? confirmErr.message : 'Unknown error')
         // Fall through to return the original error
       }
     }
