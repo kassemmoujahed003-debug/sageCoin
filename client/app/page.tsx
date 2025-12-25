@@ -57,7 +57,8 @@ export default function Home() {
 
   return (
     <main 
-      className="min-h-screen bg-primary-dark"
+      id="home-page"
+      className="min-h-screen bg-primary-dark page-content"
       style={{
         // Critical: Use 'clip' instead of 'hidden' to prevent horizontal scroll
         // 'clip' doesn't create a scroll container, so sticky positioning still works

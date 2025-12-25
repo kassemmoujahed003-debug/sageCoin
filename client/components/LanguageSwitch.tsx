@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useLanguage } from '@/contexts/LanguageContext'
 
 interface LanguageSwitchProps {
@@ -7,61 +8,58 @@ interface LanguageSwitchProps {
 }
 
 export default function LanguageSwitch({ isScrolled = false }: LanguageSwitchProps) {
-  const { language, setLanguage, isRTL } = useLanguage()
+  const { language, setLanguage } = useLanguage()
+  const [displayLanguage, setDisplayLanguage] = useState(language)
+  const [isTransitioning, setIsTransitioning] = useState(false)
+
+  // Sync display language when context language changes
+  useEffect(() => {
+    if (displayLanguage !== language) {
+      setIsTransitioning(false)
+      setDisplayLanguage(language)
+    }
+  }, [language, displayLanguage])
 
   const toggleLanguage = () => {
-    setLanguage(language === 'en' ? 'ar' : 'en')
+    if (isTransitioning) return // Prevent double clicks
+    
+    setIsTransitioning(true)
+    const newLanguage = language === 'en' ? 'ar' : 'en'
+    
+    // Fade out current language
+    setTimeout(() => {
+      setLanguage(newLanguage)
+      // Fade in new language
+      setTimeout(() => {
+        setIsTransitioning(false)
+      }, 100)
+    }, 200)
   }
-
-  const isEN = language === 'en'
-
-  // Dark Blue Background Logic
-  const trackStyles = isScrolled
-    ? 'bg-slate-900/80 backdrop-blur-md border border-white/10'
-    : 'bg-slate-950 border border-white/5 hover:border-white/20'
 
   return (
     <button
       onClick={toggleLanguage}
+      disabled={isTransitioning}
       className={`
-        group relative inline-flex h-9 w-20 items-center rounded-full 
-        ${trackStyles} 
-        transition-all duration-300 ease-in-out
-        focus:outline-none focus:ring-2 focus:ring-cyan-500/50
-        cursor-pointer overflow-hidden shadow-inner
+        inline-flex h-10 items-center justify-center px-4 rounded-lg
+        transition-all duration-300 ease-in-out border
+        ${isScrolled 
+          ? 'bg-slate-900/80 backdrop-blur-xl border-white/10 shadow-xl hover:border-white/20' 
+          : 'bg-black/20 border-white/10 hover:border-emerald-500/30'}
+        ${isTransitioning ? 'cursor-wait' : 'cursor-pointer'}
+        overflow-hidden
       `}
       aria-label="Toggle language"
-      role="switch"
-      aria-checked={language === 'ar'}
     >
-      {/* The Sliding Indicator (Cyan/Blue Glow) */}
-      <span
+      <span 
         className={`
-          absolute top-1 bottom-1 w-[44%] rounded-full
-          bg-gradient-to-br from-cyan-400 to-blue-500
-          transition-all duration-500 cubic-bezier(0.34, 1.56, 0.64, 1)
-          shadow-[0_0_12px_rgba(34,211,238,0.4)]
+          text-sm font-bold tracking-wider text-white
+          transition-all duration-300 ease-in-out
+          ${isTransitioning ? 'opacity-0 scale-90' : 'opacity-100 scale-100'}
         `}
-        style={{
-          left: isEN ? '4px' : 'calc(100% - 44% - 4px)',
-        }}
-      />
-      
-      {/* Language Labels */}
-      <div className="relative z-10 flex w-full items-center justify-between px-2.5 text-[11px] font-bold tracking-wider">
-        <span 
-          className={`flex-1 transition-all duration-300 text-center
-          ${isEN ? 'text-white' : 'text-white/40 group-hover:text-white/70'}`}
-        >
-          EN
-        </span>
-        <span 
-          className={`flex-1 transition-all duration-300 text-center
-          ${!isEN ? 'text-white' : 'text-white/40 group-hover:text-white/70'}`}
-        >
-          AR
-        </span>
-      </div>
+      >
+        {displayLanguage.toUpperCase()}
+      </span>
     </button>
   )
 }

@@ -2,37 +2,45 @@
   "node": {
     "26161f9e986563c0be31d37e14c3ab082e36b6eb": {
       "workers": {
-        "app/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!"
+        "app/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!",
+        "app/about/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "action-browser"
+        "app/page": "action-browser",
+        "app/about/page": "action-browser"
       }
     },
     "ca755ab65151d4e3d2f17914cbef4d9f4a93a72e": {
       "workers": {
-        "app/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!"
+        "app/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!",
+        "app/about/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "action-browser"
+        "app/page": "action-browser",
+        "app/about/page": "action-browser"
       }
     },
     "eb237727e4195890d6c80c499c355c8c038687ca": {
       "workers": {
-        "app/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!"
+        "app/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!",
+        "app/about/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "action-browser"
+        "app/page": "action-browser",
+        "app/about/page": "action-browser"
       }
     },
     "faca600841dc96a28da4e3c0322152400e0073b7": {
       "workers": {
-        "app/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!"
+        "app/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!",
+        "app/about/page": "(action-browser)/../node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5Cmouja%5C%5CsageCoin%5C%5Cclient%5C%5Capp%5C%5Cactions%5C%5Cform-actions.ts%22%2C%5B%22submitCallbackRequest%22%2C%22submitChangePassword%22%2C%22submitWithdrawal%22%2C%22submitDeposit%22%5D%5D%5D&__client_imported__=true!"
       },
       "layer": {
-        "app/page": "action-browser"
+        "app/page": "action-browser",
+        "app/about/page": "action-browser"
       }
     }
   },
   "edge": {},
-  "encryptionKey": "3x6eN2fMmMmJ4At4+eB9yEo2S1MQUXIZiqX19rwkJ4Q="
+  "encryptionKey": "OTTc0mLzBe+ioxtPQSu70nPemHCFNGzvfsofmezmV4I="
 }

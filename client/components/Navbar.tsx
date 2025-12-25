@@ -140,6 +140,18 @@ export default function Navbar() {
                   <a href="#courses" onClick={scrollToCourses} className={navLinkClasses}>
                     {t('nav.courses')}
                   </a>
+                  <Link 
+                    href="/about" 
+                    className={navLinkClasses}
+                    onClick={() => {
+                      document.body.setAttribute('data-navigating', 'true')
+                      setTimeout(() => {
+                        document.body.removeAttribute('data-navigating')
+                      }, 1000)
+                    }}
+                  >
+                    About
+                  </Link>
                   <Link href="/" className={navLinkClasses}>
                     {t('nav.home')}
                   </Link>
@@ -150,6 +162,18 @@ export default function Navbar() {
                   <LanguageSwitch isScrolled={isScrolled} />
                   <Link href="/" className={navLinkClasses}>
                     {t('nav.home')}
+                  </Link>
+                  <Link 
+                    href="/about" 
+                    className={navLinkClasses}
+                    onClick={() => {
+                      document.body.setAttribute('data-navigating', 'true')
+                      setTimeout(() => {
+                        document.body.removeAttribute('data-navigating')
+                      }, 1000)
+                    }}
+                  >
+                    About
                   </Link>
                   <a href="#courses" onClick={scrollToCourses} className={navLinkClasses}>
                     {t('nav.courses')}
@@ -256,6 +280,25 @@ export default function Navbar() {
                   </svg>
                 </div>
                 <span className="font-medium">{t('nav.home')}</span>
+              </Link>
+
+              <Link 
+                href="/about" 
+                className="menu-item-animate flex items-center gap-3 px-4 py-4 text-base-white hover:bg-accent/10 rounded-xl transition-colors group"
+                onClick={(e) => {
+                  document.body.setAttribute('data-navigating', 'true')
+                  setTimeout(() => {
+                    document.body.removeAttribute('data-navigating')
+                  }, 1000)
+                  handleCloseMenu()
+                }}
+              >
+                <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
+                  <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <span className="font-medium">About</span>
               </Link>
 
               <a 

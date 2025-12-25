@@ -542,14 +542,31 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   const setLanguage = (lang: Language) => {
     setLanguageState(lang)
     localStorage.setItem('language', lang)
+    
+    // Add smooth transition for direction change
+    document.documentElement.style.transition = 'all 0.3s ease-in-out'
     document.documentElement.lang = lang
     document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr'
+    
+    // Remove transition after animation completes
+    setTimeout(() => {
+      document.documentElement.style.transition = ''
+    }, 300)
   }
 
   // Update document direction when language changes
   useEffect(() => {
+    // Add smooth transition for direction change
+    document.documentElement.style.transition = 'all 0.3s ease-in-out'
     document.documentElement.lang = language
     document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr'
+    
+    // Remove transition after animation completes
+    const timeoutId = setTimeout(() => {
+      document.documentElement.style.transition = ''
+    }, 300)
+    
+    return () => clearTimeout(timeoutId)
   }, [language])
 
   const t = (key: string): string => {
