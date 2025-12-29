@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useRef, useState, useEffect, RefObject, useCallback } from 'react'
-import { motion, useScroll, useTransform, useSpring, MotionValue } from 'framer-motion'
+import { motion, useScroll, useTransform, useSpring, MotionValue, AnimatePresence } from 'framer-motion'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { getVipDashboardPreviews } from '@/services/vipDashboardPreviewService'
 import { VipDashboardPreview } from '@/types/database'
@@ -51,8 +51,200 @@ const DiamondLayers = ({ heroOpacity, children, breakpoint }: {
   )
 }
 
+// Payment Dialog Component
+function PaymentDialog({ 
+  isOpen, 
+  onClose, 
+  t, 
+  isRTL 
+}: { 
+  isOpen: boolean
+  onClose: () => void
+  t: (key: string) => string
+  isRTL: boolean
+}) {
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+    return () => {
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape)
+    }
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [isOpen, onClose])
+
+  const handlePaymentMethod = (method: 'wish' | 'usdt') => {
+    // TODO: Implement payment logic
+    console.log(`Selected payment method: ${method}`)
+  }
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          {/* Backdrop */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          >
+            <div
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={onClose}
+            />
+
+            {/* Dialog */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
+              className={`relative bg-gradient-to-br from-secondary-surface via-primary-dark to-primary-dark border-2 border-accent/30 rounded-3xl shadow-[0_0_60px_-10px_rgba(var(--accent-rgb),0.6)] w-full max-w-lg max-h-[90vh] flex flex-col overflow-hidden ${isRTL ? 'text-right' : 'text-left'}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-accent/20">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+                  <h2 className="text-2xl font-bold text-white">
+                    Choose Payment Method
+                  </h2>
+                </div>
+                <button
+                  onClick={onClose}
+                  className="text-accent hover:text-white transition-colors p-2 rounded-xl hover:bg-accent/10"
+                  aria-label="Close"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto p-6">
+                <p className="text-accent/80 mb-6 text-center">
+                  Select your preferred payment method to subscribe to VIP Trading
+                </p>
+
+                {/* Payment Options */}
+                <div className="grid grid-cols-1 gap-4">
+                  {/* Wish Payment Option */}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handlePaymentMethod('wish')}
+                    className="relative group bg-gradient-to-br from-secondary-surface/80 to-primary-dark/80 border-2 border-accent/30 rounded-2xl p-6 hover:border-accent/50 transition-all duration-300 overflow-hidden"
+                  >
+                    {/* Background glow effect */}
+                    <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    {/* Inner border */}
+                    <div className="absolute inset-2 border border-accent/20 rounded-xl pointer-events-none"></div>
+                    
+                    <div className="relative z-10 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        {/* Icon/Logo placeholder */}
+                        <div className="w-16 h-16 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center backdrop-blur-sm">
+                          <svg className="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-white mb-1">Pay with Wish</h3>
+                          <p className="text-sm text-accent/70">Use your Wish balance</p>
+                        </div>
+                      </div>
+                      <div className="text-accent group-hover:translate-x-1 transition-transform">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </motion.button>
+
+                  {/* USDT Payment Option */}
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handlePaymentMethod('usdt')}
+                    className="relative group bg-gradient-to-br from-secondary-surface/80 to-primary-dark/80 border-2 border-accent/30 rounded-2xl p-6 hover:border-accent/50 transition-all duration-300 overflow-hidden"
+                  >
+                    {/* Background glow effect */}
+                    <div className="absolute inset-0 bg-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    
+                    {/* Inner border */}
+                    <div className="absolute inset-2 border border-accent/20 rounded-xl pointer-events-none"></div>
+                    
+                    <div className="relative z-10 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        {/* Icon/Logo placeholder */}
+                        <div className="w-16 h-16 rounded-xl bg-accent/20 border border-accent/30 flex items-center justify-center backdrop-blur-sm">
+                          <svg className="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-white mb-1">Pay with USDT</h3>
+                          <p className="text-sm text-accent/70">Cryptocurrency payment</p>
+                        </div>
+                      </div>
+                      <div className="text-accent group-hover:translate-x-1 transition-transform">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </motion.button>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div className={`flex items-center ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} justify-end gap-4 p-6 border-t border-accent/20`}>
+                <button
+                  onClick={onClose}
+                  className="px-6 py-3 bg-secondary-surface/50 border border-accent/20 text-white font-semibold rounded-xl hover:bg-secondary-surface/70 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  )
+}
+
 // Mobile-optimized static content (no scroll animation)
-function MobileVipContent({ t, isRTL }: { t: (key: string) => string, isRTL: boolean }) {
+function MobileVipContent({ t, isRTL, onSubscribeClick }: { t: (key: string) => string, isRTL: boolean, onSubscribeClick: () => void }) {
   const steps = [
     { 
       step: '01', 
@@ -126,7 +318,10 @@ function MobileVipContent({ t, isRTL }: { t: (key: string) => string, isRTL: boo
         viewport={{ once: true }}
         className="mt-8 text-center"
       >
-        <button className="btn-primary text-lg font-bold px-8 py-4 shadow-xl w-full sm:w-auto rounded-xl">
+        <button 
+          onClick={onSubscribeClick}
+          className="btn-primary text-lg font-bold px-8 py-4 shadow-xl w-full sm:w-auto rounded-xl"
+        >
           {t('vip.subscribe')}
         </button>
       </motion.div>
@@ -139,12 +334,14 @@ function ScrollAnimatedContent({
   containerRef,
   t,
   isRTL,
-  breakpoint
+  breakpoint,
+  onSubscribeClick
 }: {
   containerRef: RefObject<HTMLElement>
   t: (key: string) => string
   isRTL: boolean
   breakpoint: 'mobile' | 'tablet' | 'desktop'
+  onSubscribeClick: () => void
 }) {
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -397,7 +594,10 @@ function ScrollAnimatedContent({
                 {t('vip.startJourneyDescription')}
               </p>
               <motion.div style={{ pointerEvents }} className={`pt-2 md:pt-4 flex justify-center lg:justify-start ${isRTL ? 'lg:justify-end' : ''}`}>
-                <button className="btn-primary text-sm md:text-base lg:text-lg font-bold px-6 md:px-8 lg:px-10 py-3 md:py-4 shadow-xl hover:scale-105 transition-transform rounded-xl w-full sm:w-auto">
+                <button 
+                  onClick={onSubscribeClick}
+                  className="btn-primary text-sm md:text-base lg:text-lg font-bold px-6 md:px-8 lg:px-10 py-3 md:py-4 shadow-xl hover:scale-105 transition-transform rounded-xl w-full sm:w-auto"
+                >
                   {t('vip.subscribe')}
                 </button>
               </motion.div>
@@ -420,6 +620,7 @@ export default function VipTradingSection({ isMember, joinedVip }: VipTradingSec
   const [isLoadingPreviews, setIsLoadingPreviews] = useState(true)
   const [breakpoint, setBreakpoint] = useState<'mobile' | 'tablet' | 'desktop'>('desktop')
   const [isReady, setIsReady] = useState(false)
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = useState(false)
   
   const [containerElement, setContainerElement] = useState<HTMLElement | null>(null)
   const containerRef = useRef<HTMLElement | null>(null)
@@ -524,15 +725,20 @@ export default function VipTradingSection({ isMember, joinedVip }: VipTradingSec
     )
   }
 
+  const handleSubscribeClick = () => {
+    setIsPaymentDialogOpen(true)
+  }
+
   return (
-    <section
-      ref={setRef}
-      className={hasAccess ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20" : `relative ${getScrollHeight()}`}
-      style={{
-        // Ensure no overflow issues that break sticky positioning
-        overflow: hasAccess ? 'visible' : 'visible',
-      }}
-    >
+    <>
+      <section
+        ref={setRef}
+        className={hasAccess ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20" : `relative ${getScrollHeight()}`}
+        style={{
+          // Ensure no overflow issues that break sticky positioning
+          overflow: hasAccess ? 'visible' : 'visible',
+        }}
+      >
       {hasAccess ? (
         // VIP MEMBER VIEW
         <div className="relative overflow-hidden bg-gradient-to-br from-secondary-surface to-primary-dark p-6 md:p-8 lg:p-12 border border-accent/30 rounded-2xl md:rounded-3xl shadow-2xl">
@@ -616,7 +822,7 @@ export default function VipTradingSection({ isMember, joinedVip }: VipTradingSec
       ) : (
         // NON-VIP VIEW - Mobile gets static cards, tablet/desktop gets scroll animation
         breakpoint === 'mobile' ? (
-          <MobileVipContent t={t} isRTL={isRTL} />
+          <MobileVipContent t={t} isRTL={isRTL} onSubscribeClick={handleSubscribeClick} />
         ) : (
           containerElement ? (
             <ScrollAnimatedContent
@@ -624,6 +830,7 @@ export default function VipTradingSection({ isMember, joinedVip }: VipTradingSec
               t={t}
               isRTL={isRTL}
               breakpoint={breakpoint}
+              onSubscribeClick={handleSubscribeClick}
             />
           ) : (
             <div className="sticky top-0 h-screen overflow-hidden flex items-center justify-center">
@@ -633,5 +840,14 @@ export default function VipTradingSection({ isMember, joinedVip }: VipTradingSec
         )
       )}
     </section>
+
+    {/* Payment Dialog */}
+    <PaymentDialog
+      isOpen={isPaymentDialogOpen}
+      onClose={() => setIsPaymentDialogOpen(false)}
+      t={t}
+      isRTL={isRTL}
+    />
+    </>
   )
 }

@@ -1,12 +1,22 @@
 'use client'
 
 import { useEffect, useState, useCallback, useMemo } from 'react'
+import { usePathname } from 'next/navigation'
 
 export default function SplashScreen() {
+  const pathname = usePathname()
   const [isVisible, setIsVisible] = useState(true)
   const [isAnimating, setIsAnimating] = useState(false)
   const [isPageLoaded, setIsPageLoaded] = useState(false)
   const [currentStage, setCurrentStage] = useState(0)
+
+  // Hide splash screen on products page
+  useEffect(() => {
+    if (pathname === '/products') {
+      setIsVisible(false)
+      setIsAnimating(false)
+    }
+  }, [pathname])
 
   // Stable random positions for tickers and candles
   const tickerPositions = useMemo(() => {

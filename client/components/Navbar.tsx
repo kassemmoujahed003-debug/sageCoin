@@ -68,16 +68,6 @@ export default function Navbar() {
     setIsMenuOpen(true)
   }, [])
 
-  const scrollToCourses = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault()
-    handleCloseMenu()
-    setTimeout(() => {
-      const coursesSection = document.getElementById('courses')
-      if (coursesSection) {
-        coursesSection.scrollIntoView({ behavior: 'smooth' })
-      }
-    }, 300)
-  }
 
   const handleLogout = () => {
     if (typeof window !== 'undefined') {
@@ -137,9 +127,9 @@ export default function Navbar() {
                       {t('nav.dashboard')}
                     </Link>
                   )}
-                  <a href="#courses" onClick={scrollToCourses} className={navLinkClasses}>
-                    {t('nav.courses')}
-                  </a>
+                  <Link href="/products" className={navLinkClasses}>
+                    {t('nav.products')}
+                  </Link>
                   <Link 
                     href="/about" 
                     className={navLinkClasses}
@@ -175,9 +165,9 @@ export default function Navbar() {
                   >
                     About
                   </Link>
-                  <a href="#courses" onClick={scrollToCourses} className={navLinkClasses}>
-                    {t('nav.courses')}
-                  </a>
+                  <Link href="/products" className={navLinkClasses}>
+                    {t('nav.products')}
+                  </Link>
                   {userIsAdminUser && (
                     <Link href="/dashboard" className={navLinkClasses}>
                       {t('nav.dashboard')}
@@ -301,18 +291,18 @@ export default function Navbar() {
                 <span className="font-medium">About</span>
               </Link>
 
-              <a 
-                href="#courses" 
-                onClick={scrollToCourses}
+              <Link 
+                href="/products" 
                 className="menu-item-animate flex items-center gap-3 px-4 py-4 text-base-white hover:bg-accent/10 rounded-xl transition-colors group"
+                onClick={handleCloseMenu}
               >
                 <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
                   <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                   </svg>
                 </div>
-                <span className="font-medium">{t('nav.courses')}</span>
-              </a>
+                <span className="font-medium">{t('nav.products')}</span>
+              </Link>
 
               {userIsAdminUser && (
                 <Link 

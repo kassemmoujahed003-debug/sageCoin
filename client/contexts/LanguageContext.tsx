@@ -19,6 +19,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Navigation
     'nav.home': 'Home',
     'nav.courses': 'Courses',
+    'nav.products': 'Products',
     'nav.login': 'Login',
     'nav.logout': 'Log out',
     'nav.dashboard': 'Dashboard',
@@ -274,6 +275,7 @@ const translations: Record<Language, Record<string, string>> = {
     // Navigation
     'nav.home': 'الرئيسية',
     'nav.courses': 'الدورات',
+    'nav.products': 'المنتجات',
     'nav.login': 'تسجيل الدخول',
     'nav.logout': 'تسجيل الخروج',
     'nav.dashboard': 'لوحة التحكم',
